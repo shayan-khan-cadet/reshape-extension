@@ -61,11 +61,20 @@ On first open the extension asks for a license key (`RSHP-XXXX-XXXX-XXXX-XXXX`).
 - Each activation binds the key to **this browser profile** (`deviceId`)
 - Without a valid key the interceptor stays off
 
-**Seller file:** `tokens-SELLER-ONLY.txt` contains 100 valid keys. Keep it private. Give one key per customer.
 
-**True single-seat across devices:** set `LICENSE_SERVER_URL` in `src/license.js` to your own API that records `key → deviceId` and rejects a second device. Offline mode alone cannot stop someone from sharing a key before activation.
+## License keys
 
-## Free online single-seat lock (Cloudflare)
+On first open the extension asks for a license key (`RSHP-XXXX-XXXX-XXXX-XXXX`).
+
+- Without a valid key the interceptor stays off
+- Each key is meant for **one browser profile**
+- **License keys are not stored in this repository** — contact the maintainer for a key
+
+Early users may receive a free key. After the free allocation is used up, keys may be sold.
+
+## Single-seat lock (optional)
+
+For true one-device-at-a-time enforcement, deploy the Worker in `license-server/` (Cloudflare free tier) and set `LICENSE_SERVER_URL` in `src/license.js` to your Worker URL.
 
 See folder **`license-server/`**:
 
