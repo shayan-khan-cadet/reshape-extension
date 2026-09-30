@@ -1,0 +1,13 @@
+# Reshape license server — Cloudflare Workers (free tier)
+# Docs: https://developers.cloudflare.com/workers/
+
+name = "reshape-license"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# Create KV once, then paste the id here (wrangler prints it)
+#   npx wrangler kv namespace create LICENSE_KV
+[[kv_namespaces]]
+binding = "LICENSE_KV"
+id = "ae0e38142cd346e9a065fb29646fe48c"
+# preview_id = "REPLACE_WITH_PREVIEW_ID"  # optional for local dev

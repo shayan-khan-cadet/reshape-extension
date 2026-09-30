@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reshape</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- License gate (shown until activated) -->
+  <div id="licenseGate" class="license-gate hidden">
+    <div class="brand gate-brand">
+      <span class="logo">◈</span>
+      <div>
+        <h1>Reshape</h1>
+        <p class="sub">Activate your license</p>
+      </div>
+    </div>
+    <p class="gate-copy">Enter your license key to unlock the interceptor. Each key works on one browser profile.</p>
+    <label>License key
+      <input type="text" id="licenseInput" placeholder="RSHP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
+    </label>
+    <button id="btnActivate" class="btn primary full">Activate</button>
+    <p id="licenseError" class="gate-error hidden"></p>
+    <p class="gate-hint">Don’t have a key? Contact the seller.</p>
+  </div>
+
+  <div id="appRoot" class="hidden">
+    <header>
+      <div class="brand">
+        <span class="logo">◈</span>
+        <div>
+          <h1>Reshape</h1>
+          <p class="sub">API response rewriter · <span id="planBadge">Pro</span></p>
+        </div>
+      </div>
+      <label class="toggle" title="Enable / disable interceptor">
+        <input type="checkbox" id="interceptorToggle" checked />
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <div class="toolbar">
+      <button id="btnAdd" class="btn primary">+ New rule</button>
+      <button id="btnOpenTab" class="btn">Open in tab</button>
+    </div>
+
+    <ul id="ruleList" class="rule-list"></ul>
+
+    <div id="editor" class="editor hidden">
+      <div class="editor-header">
+        <h2 id="editorTitle">Edit rule</h2>
+        <button id="btnCloseEditor" class="btn ghost">✕</button>
+      </div>
+
+      <label>Name
+        <input type="text" id="fName" placeholder="My rule" />
+      </label>
+      <label>Description
+        <input type="text" id="fDesc" placeholder="Optional" />
+      </label>
+
+      <div class="row">
+        <label>Match target
+          <select id="fMatchTarget">
+            <option value="url">Full URL</option>
+            <option value="host">Host</option>
+            <option value="path">Path</option>
+          </select>
+        </label>
+        <label>Operator
+          <select id="fMatchOp">
+            <option value="contains">contains</option>
+            <option value="equals">equals</option>
+            <option value="wildcard">wildcard</option>
+            <option value="regex">regex</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Match value
+        <input type="text" id="fMatchValue" placeholder="/api/users  or  *example.com*" />
+      </label>
+
+      <div class="row">
+        <label>Method
+          <select id="fMethod">
+            <option value="ANY">ANY</option>
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </label>
+        <label>Status override
+          <select id="fStatus">
+            <option value="">Original</option>
+            <option value="200">200</option>
+            <option value="201">201</option>
+            <option value="204">204</option>
+            <option value="400">400</option>
+            <option value="401">401</option>
+            <option value="403">403</option>
+            <option value="404">404</option>
+            <option value="500">500</option>
+            <option value="502">502</option>
+            <option value="503">503</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Body mode
+        <select id="fBodyMode">
+          <option value="static">Static JSON / text</option>
+          <option value="dynamic">Dynamic script</option>
+        </select>
+      </label>
+
+      <label id="staticWrap">Static body
+        <textarea id="fStaticBody" rows="8" placeholder='{"ok": true}'></textarea>
+      </label>
+
+      <label id="dynamicWrap" class="hidden">Dynamic script
+        <textarea id="fDynamicScript" rows="10" placeholder="function modifyResponse(args) {
+  return args.responseJSON;
+}"></textarea>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" id="fServeLocal" />
+        Serve without real request (mock)
+      </label>
+
+      <div class="editor-actions">
+        <button id="btnSave" class="btn primary">Save</button>
+        <button id="btnDelete" class="btn danger">Delete</button>
+      </div>
+    </div>
+
+    <footer>
+      <span id="statusText">Ready</span>
+      <button id="btnSamples" class="btn ghost link">Restore samples</button>
+    </footer>
+  </div>
+
+  <script src="../src/license.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
