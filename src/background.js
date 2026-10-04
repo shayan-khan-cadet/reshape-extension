@@ -1,5 +1,3 @@
-importScripts("license.js");
-
 const DEFAULT_SCRIPT = `function modifyResponse(args) {
   const { responseJSON } = args;
   return responseJSON;

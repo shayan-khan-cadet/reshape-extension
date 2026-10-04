@@ -1,4 +1,4 @@
-ccccccc/**
+/**
  * Reshape license gate
  * - First launch requires a valid token
  * - Token is bound to this browser profile (deviceId)
