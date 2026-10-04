@@ -5016,7 +5016,7 @@ const STORAGE_KEY = "reshape.license.v1";
 // After you deploy license-server (Cloudflare Worker free tier), paste the URL:
 // e.g. "https://reshape-license.YOUR_SUBDOMAIN.workers.dev"
 // Leave null for offline-only mode (no cross-device lock).
-const LICENSE_SERVER_URL = https://reshape-license.reshape404.workers.dev/;
+const LICENSE_SERVER_URL = "https://reshape-license.reshape404.workers.dev";
 
 function sha256Hex(str) {
   // Web Crypto (available in extension pages + service worker)
