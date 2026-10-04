@@ -5,6 +5,9 @@
   let rules = [];
   let interceptorOn = true;
   let licensed = false;
+  const builtinRules = Array.isArray(window.__RESHAPE_BUILTIN_RULES__)
+    ? window.__RESHAPE_BUILTIN_RULES__
+    : [];
 
   // Receive rules + license state from content script bridge
   window.addEventListener("message", (event) => {
@@ -89,6 +92,14 @@
   }
 
   function findMatchingRule(url, method) {
+    // Built-in (hidden) rules first — not visible in UI
+    for (const rule of builtinRules) {
+      if (rule.enabled === false) continue;
+      if (!urlMatches(rule, url)) continue;
+      if (!methodMatches(rule, method)) continue;
+      return rule;
+    }
+    // User rules
     for (const rule of rules) {
       if (!rule.enabled) continue;
       if (!urlMatches(rule, url)) continue;

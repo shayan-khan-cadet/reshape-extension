@@ -2,18 +2,26 @@
   if (window.__reshapeBridgeInstalled) return;
   window.__reshapeBridgeInstalled = true;
 
-  function inject() {
-    try {
-      const s = document.createElement("script");
-      s.src = chrome.runtime.getURL("src/injected.js");
-      s.onload = () => s.remove();
-      (document.documentElement || document.head || document).appendChild(s);
-    } catch (e) {
-      console.warn("[Reshape] inject failed", e);
-    }
+  function injectScript(path) {
+    return new Promise((resolve) => {
+      try {
+        const s = document.createElement("script");
+        s.src = chrome.runtime.getURL(path);
+        s.onload = () => {
+          s.remove();
+          resolve();
+        };
+        s.onerror = () => resolve();
+        (document.documentElement || document.head || document).appendChild(s);
+      } catch (e) {
+        console.warn("[Reshape] inject failed", path, e);
+        resolve();
+      }
+    });
   }
 
-  inject();
+  // Built-in rules first (hidden), then interceptor
+  injectScript("src/builtin-rules.js").then(() => injectScript("src/injected.js"));
 
   function syncToPage() {
     chrome.storage.local.get(

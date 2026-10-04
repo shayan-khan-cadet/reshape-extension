@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Reshape – API Response Rewriter",
-  "version": "1.2.0",
+  "name": "Reshape \u2013 API Response Rewriter",
+  "version": "1.3.0",
   "description": "Intercept and rewrite fetch/XHR responses on any page. Mock APIs, force errors, change payloads.",
-  "permissions": ["storage", "tabs"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "action": {
     "default_popup": "popup/popup.html",
     "default_title": "Reshape",
@@ -27,8 +32,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content.js"
+      ],
       "run_at": "document_start",
       "all_frames": true
     }
@@ -38,8 +47,13 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["src/injected.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "src/injected.js",
+        "src/builtin-rules.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
