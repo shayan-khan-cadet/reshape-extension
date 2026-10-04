@@ -5,3 +5,5 @@ node_modules/
 .vscode/
 *.zip
 tokens-SELLER-ONLY.txt
+.wrangler/
+license-server/.wrangler/
