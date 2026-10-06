@@ -346,27 +346,120 @@ function onImportFile(e) {
     if (app) app.classList.remove("hidden");
   }
 
-  $("#btnActivate")?.addEventListener("click", async () => {
-    const err = $("#licenseError");
-    err?.classList.add("hidden");
-    const result = await ReshapeLicense.activateLicense($("#licenseInput").value);
+
+  // --- License path UI (Ameer / Ghareeb) ---
+  function showGatePanel(id) {
+    ["gateChoice", "gateFree", "gatePaid", "gateKeyOnly"].forEach((pid) => {
+      const el = document.getElementById(pid);
+      if (el) el.classList.toggle("hidden", pid !== id);
+    });
+  }
+
+  function fillGateFromConfig() {
+    const cfg = window.RESHAPE_GATE_CONFIG || {};
+    const freeTitle = document.getElementById("freeTitle");
+    if (freeTitle && cfg.freeTitle) freeTitle.textContent = cfg.freeTitle;
+    const freeSteps = document.getElementById("freeSteps");
+    if (freeSteps) {
+      freeSteps.innerHTML = "";
+      (cfg.freeSteps || []).forEach((s) => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        freeSteps.appendChild(li);
+      });
+    }
+    const freeLinks = document.getElementById("freeLinks");
+    if (freeLinks) {
+      freeLinks.innerHTML = "";
+      (cfg.freeLinks || []).forEach((l) => {
+        const a = document.createElement("a");
+        a.href = l.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.className = "gate-link-btn";
+        a.textContent = l.label;
+        freeLinks.appendChild(a);
+      });
+    }
+    const paidTitle = document.getElementById("paidTitle");
+    if (paidTitle && cfg.paidTitle) paidTitle.textContent = cfg.paidTitle;
+    const paidNote = document.getElementById("paidNote");
+    if (paidNote) paidNote.textContent = cfg.paidNote || "";
+    const paidMethods = document.getElementById("paidMethods");
+    if (paidMethods) {
+      paidMethods.innerHTML = "";
+      (cfg.payments || []).forEach((p) => {
+        const row = document.createElement("div");
+        row.className = "gate-pay-row";
+        row.innerHTML = `<strong>${p.name}</strong><span>${p.detail}</span>`;
+        paidMethods.appendChild(row);
+      });
+    }
+    const paidLinks = document.getElementById("paidLinks");
+    if (paidLinks) {
+      paidLinks.innerHTML = "";
+      (cfg.paidContact || []).forEach((l) => {
+        const a = document.createElement("a");
+        a.href = l.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.className = "gate-link-btn";
+        a.textContent = l.label;
+        paidLinks.appendChild(a);
+      });
+    }
+  }
+
+  async function tryActivate(inputId, errId) {
+    const input = document.getElementById(inputId);
+    const err = document.getElementById(errId);
+    if (err) err.classList.add("hidden");
+    const result = await ReshapeLicense.activateLicense(input ? input.value : "");
     if (!result.ok) {
       if (err) {
         err.textContent = result.error || "Activation failed";
         err.classList.remove("hidden");
       }
-      return;
+      return false;
     }
+    return true;
+  }
+
+  fillGateFromConfig();
+  document.getElementById("btnAmeer")?.addEventListener("click", () => showGatePanel("gatePaid"));
+  document.getElementById("btnGhareeb")?.addEventListener("click", () => showGatePanel("gateFree"));
+  document.getElementById("btnHaveKey")?.addEventListener("click", () => showGatePanel("gateKeyOnly"));
+  document.querySelectorAll(".gate-back").forEach((btn) => {
+    btn.addEventListener("click", () => showGatePanel("gateChoice"));
+  });
+
+  async function afterActivateDash() {
     gate.classList.add("hidden");
     if (app) app.classList.remove("hidden");
     toast("License activated");
     await load();
     $("#interceptorToggle").checked = interceptorOn;
     renderList();
+  }
+
+  $("#btnActivate")?.addEventListener("click", async () => {
+    if (await tryActivate("licenseInput", "licenseError")) await afterActivateDash();
+  });
+  $("#btnActivateFree")?.addEventListener("click", async () => {
+    if (await tryActivate("licenseInputFree", "licenseErrorFree")) await afterActivateDash();
+  });
+  $("#btnActivatePaid")?.addEventListener("click", async () => {
+    if (await tryActivate("licenseInputPaid", "licenseErrorPaid")) await afterActivateDash();
   });
 
-  $("#licenseInput")?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") $("#btnActivate")?.click();
+  ["licenseInput", "licenseInputFree", "licenseInputPaid"].forEach((id) => {
+    document.getElementById(id)?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        if (id === "licenseInput") $("#btnActivate")?.click();
+        if (id === "licenseInputFree") $("#btnActivateFree")?.click();
+        if (id === "licenseInputPaid") $("#btnActivatePaid")?.click();
+      }
+    });
   });
 
   await load();

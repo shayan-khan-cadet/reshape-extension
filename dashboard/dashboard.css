@@ -319,3 +319,37 @@ textarea {
   text-transform: uppercase;
 }
 #appRoot.hidden { display: none !important; }
+
+.gate-panel { display: flex; flex-direction: column; gap: 12px; }
+.gate-panel.hidden { display: none !important; }
+.gate-choice-btn { font-size: 15px; padding: 14px; font-weight: 600; }
+.gate-title { font-size: 15px; font-weight: 600; }
+.gate-steps { margin: 0 0 0 18px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.gate-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.gate-link-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+}
+.gate-link-btn:hover { border-color: var(--accent); }
+.gate-hr { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
+.gate-pay-list { display: flex; flex-direction: column; gap: 8px; }
+.gate-pay-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+.gate-pay-row strong { color: var(--text); }
+.gate-pay-row span { color: var(--muted); word-break: break-all; }
+.gate-brand { margin-bottom: 8px; }
+.btn.full { width: 100%; text-align: center; }

@@ -7,22 +7,63 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <!-- License gate (shown until activated) -->
+<!-- License gate: choice → free / paid → activate -->
   <div id="licenseGate" class="license-gate hidden">
     <div class="brand gate-brand">
       <span class="logo">◈</span>
       <div>
         <h1>Reshape</h1>
-        <p class="sub">Activate your license</p>
+        <p class="sub">Welcome</p>
       </div>
     </div>
-    <p class="gate-copy">Enter your license key to unlock the interceptor. Each key works on one browser profile.</p>
-    <label>License key
-      <input type="text" id="licenseInput" placeholder="RSHP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
-    </label>
-    <button id="btnActivate" class="btn primary full">Activate</button>
-    <p id="licenseError" class="gate-error hidden"></p>
-    <p class="gate-hint">Don’t have a key? Contact the seller.</p>
+
+    <!-- Step 1: choose path -->
+    <div id="gateChoice" class="gate-panel">
+      <p class="gate-copy">How do you want to unlock Reshape?</p>
+      <button type="button" id="btnAmeer" class="btn primary full gate-choice-btn">Ameer hun 💰</button>
+      <button type="button" id="btnGhareeb" class="btn full gate-choice-btn">Ghareeb hun 🙏</button>
+      <button type="button" id="btnHaveKey" class="btn ghost full">I already have a key</button>
+    </div>
+
+    <!-- Step 2a: free -->
+    <div id="gateFree" class="gate-panel hidden">
+      <p class="gate-title" id="freeTitle">Free key</p>
+      <ol id="freeSteps" class="gate-steps"></ol>
+      <div id="freeLinks" class="gate-links"></div>
+      <hr class="gate-hr" />
+      <label>Paste your free key
+        <input type="text" id="licenseInputFree" placeholder="RSHP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
+      </label>
+      <button type="button" id="btnActivateFree" class="btn primary full">Activate</button>
+      <p id="licenseErrorFree" class="gate-error hidden"></p>
+      <button type="button" class="btn ghost full gate-back">← Back</button>
+    </div>
+
+    <!-- Step 2b: paid -->
+    <div id="gatePaid" class="gate-panel hidden">
+      <p class="gate-title" id="paidTitle">Support &amp; get a key</p>
+      <p class="gate-copy" id="paidNote"></p>
+      <div id="paidMethods" class="gate-pay-list"></div>
+      <div id="paidLinks" class="gate-links"></div>
+      <hr class="gate-hr" />
+      <label>Paste key after payment
+        <input type="text" id="licenseInputPaid" placeholder="RSHP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
+      </label>
+      <button type="button" id="btnActivatePaid" class="btn primary full">Activate</button>
+      <p id="licenseErrorPaid" class="gate-error hidden"></p>
+      <button type="button" class="btn ghost full gate-back">← Back</button>
+    </div>
+
+    <!-- Step 2c: already have key -->
+    <div id="gateKeyOnly" class="gate-panel hidden">
+      <p class="gate-copy">Enter your license key. Each key works on one browser profile.</p>
+      <label>License key
+        <input type="text" id="licenseInput" placeholder="RSHP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
+      </label>
+      <button type="button" id="btnActivate" class="btn primary full">Activate</button>
+      <p id="licenseError" class="gate-error hidden"></p>
+      <button type="button" class="btn ghost full gate-back">← Back</button>
+    </div>
   </div>
 
   <div id="appRoot" class="hidden">
@@ -144,6 +185,7 @@
     </footer>
   </div>
 
+  <script src="../src/gate-config.js"></script>
   <script src="../src/license.js"></script>
   <script src="popup.js"></script>
 </body>

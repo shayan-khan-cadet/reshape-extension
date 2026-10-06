@@ -284,3 +284,36 @@ footer {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+
+/* Gate choice panels */
+.gate-panel { display: flex; flex-direction: column; gap: 10px; }
+.gate-panel.hidden { display: none !important; }
+.gate-choice-btn { font-size: 14px; padding: 12px; font-weight: 600; }
+.gate-title { font-size: 14px; font-weight: 600; }
+.gate-steps { margin: 0 0 0 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.gate-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.gate-link-btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 12px;
+}
+.gate-link-btn:hover { border-color: var(--accent); }
+.gate-hr { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.gate-pay-list { display: flex; flex-direction: column; gap: 8px; }
+.gate-pay-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+.gate-pay-row strong { color: var(--text); }
+.gate-pay-row span { color: var(--muted); word-break: break-all; }
