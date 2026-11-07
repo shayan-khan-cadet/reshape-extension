@@ -5128,7 +5128,55 @@ async function activateLicense(plainKey) {
     plan: "pro",
   };
   await saveLicense(record);
+  await setUninstallUrl(record);
   return { ok: true, record };
+}
+
+
+/**
+ * Release this device's binding on the server, then clear the local
+ * license. Call this from a "Deactivate" button, and (via the
+ * uninstall URL below) on uninstall.
+ */
+async function releaseLicense() {
+  const record = await loadLicense();
+  if (record && record.key) {
+    const deviceId = await getOrCreateDeviceId();
+    if (LICENSE_SERVER_URL) {
+      try {
+        await fetch(LICENSE_SERVER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: record.key, deviceId, action: "release" }),
+        });
+      } catch {
+        // Offline: local clear still happens below; the 7-day
+        // expiry on the server frees the key anyway.
+      }
+    }
+  }
+  await clearLicense();
+  try {
+    chrome.runtime.setUninstallURL("");
+  } catch {}
+  return { ok: true };
+}
+
+/**
+ * Register the uninstall release URL. Chrome can only open a GET
+ * URL on uninstall, so the v2 server also accepts:
+ *   GET /?action=release&key=RSHP-...&deviceId=...
+ * Call this right after a successful activation.
+ */
+async function setUninstallUrl(record) {
+  if (!LICENSE_SERVER_URL || !record || !record.key) return;
+  try {
+    const url =
+      LICENSE_SERVER_URL +
+      "?action=release&key=" + encodeURIComponent(record.key) +
+      "&deviceId=" + encodeURIComponent(record.deviceId);
+    chrome.runtime.setUninstallURL(url);
+  } catch {}
 }
 
 /**
@@ -5183,6 +5231,8 @@ if (typeof globalThis !== "undefined") {
     isLicensed,
     loadLicense,
     clearLicense,
+    releaseLicense,
+    setUninstallUrl,
     normalizeKey,
     isKeyFormatValid,
   };

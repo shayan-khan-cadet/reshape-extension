@@ -1,3 +1,7 @@
+// License heartbeat (v2): keeps lastSeen fresh so a key that is
+// actually installed is never freed by the 7-day expiry.
+try { importScripts("license.js"); } catch {}
+
 const DEFAULT_SCRIPT = `function modifyResponse(args) {
   const { responseJSON } = args;
   return responseJSON;
@@ -116,4 +120,22 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     chrome.runtime.openOptionsPage();
     sendResponse({ ok: true });
   }
+});
+
+// --- Reshape license heartbeat (v2) ---
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.create("reshape-license-check", { periodInMinutes: 1440 });
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.alarms.create("reshape-license-check", { periodInMinutes: 1440 });
+});
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name !== "reshape-license-check") return;
+  try {
+    if (globalThis.ReshapeLicense && globalThis.ReshapeLicense.isLicensed) {
+      await globalThis.ReshapeLicense.isLicensed();
+    }
+  } catch {}
 });
